@@ -57,7 +57,7 @@ BreadthFirstFinder.prototype.findPath = function(startX, startY, endX, endY, gri
             return Util.backtrace(endNode);
         }
 
-        neighbors = grid.getNeighbors(node, diagonalMovement);
+        neighbors = grid.getNeighbors(node, diagonalMovement, endNode);
         for (i = 0, l = neighbors.length; i < l; ++i) {
             neighbor = neighbors[i];
 
