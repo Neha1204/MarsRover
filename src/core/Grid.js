@@ -141,9 +141,13 @@ Grid.prototype.setWalkableAt = function(x, y, walkable) {
  * @param {Node} node
  * @param {DiagonalMovement} diagonalMovement
  */
-Grid.prototype.getNeighbors = function(node, diagonalMovement) {
+Grid.prototype.getNeighbors = function(node, diagonalMovement, EndNode) {
     var x = node.x,
         y = node.y,
+        ex = EndNode.x,
+        ey = EndNode.y,
+        dx = ex-x,
+        dy = ey-y,
         neighbors = [],
         s0 = false, d0 = false,
         s1 = false, d1 = false,
@@ -153,29 +157,56 @@ Grid.prototype.getNeighbors = function(node, diagonalMovement) {
 
     // ↑
     if (this.isWalkableAt(x, y - 1)) {
-        neighbors.push(nodes[y - 1][x]);
+    //    neighbors.push(nodes[y - 1][x]);
         s0 = true;
     }
     // →
     if (this.isWalkableAt(x + 1, y)) {
-        neighbors.push(nodes[y][x + 1]);
+    //    neighbors.push(nodes[y][x + 1]);
         s1 = true;
     }
     // ↓
     if (this.isWalkableAt(x, y + 1)) {
-        neighbors.push(nodes[y + 1][x]);
+   //     neighbors.push(nodes[y + 1][x]);
         s2 = true;
     }
     // ←
     if (this.isWalkableAt(x - 1, y)) {
-        neighbors.push(nodes[y][x - 1]);
+   //     neighbors.push(nodes[y][x - 1]);
         s3 = true;
     }
-
-    if (diagonalMovement === DiagonalMovement.Never) {
+    
+    if(dx>0){
+        if(s1)   neighbors.push(nodes[y][x + 1]);
+        if(dy>0) {
+            if(s2) neighbors.push(nodes[y + 1][x]);
+            if(s0) neighbors.push(nodes[y - 1][x]);
+        }
+        else {
+            if(s0) neighbors.push(nodes[y - 1][x]);
+            if(s2) neighbors.push(nodes[y + 1][x]);
+        }
+        
+        if(s3)  neighbors.push(nodes[y][x - 1]);
+    }
+    
+    else{
+        if(s3)  neighbors.push(nodes[y][x - 1]);
+         if(dy>0) {
+            if(s2) neighbors.push(nodes[y + 1][x]);
+            if(s0) neighbors.push(nodes[y - 1][x]);
+        }
+        else {
+            if(s0) neighbors.push(nodes[y - 1][x]);
+            if(s2) neighbors.push(nodes[y + 1][x]);
+        }
+        if(s1)   neighbors.push(nodes[y][x + 1]);
+    }
+    
+     if (diagonalMovement === DiagonalMovement.Never) {
         return neighbors;
     }
-
+        
     if (diagonalMovement === DiagonalMovement.OnlyWhenNoObstacles) {
         d0 = s3 && s0;
         d1 = s0 && s1;
