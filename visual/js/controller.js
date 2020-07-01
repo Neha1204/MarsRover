@@ -91,8 +91,8 @@ var Controller = StateMachine.create({
 });
 
 $.extend(Controller, {
-    gridSize: [40, 16], // number of nodes horizontally and vertically
-    operationsPerSecond: 300,
+    gridSize: [30, 16], // number of nodes horizontally and vertically
+    operationsPerSecond: 100,
 
     /**
      * Asynchronous transition from `none` state to `ready` state.
