@@ -482,8 +482,8 @@ $.extend(Controller, {
         this.setEndPos(centerX + 5, centerY);
         */
         
-        width = gridSize[0];
-        height = gridSize[1];
+        width = this.gridSize[0];
+        height = this.gridSize[1];
         
         centerX = Math.floor(width/2);
         centerY = Math.floor(height/2);
