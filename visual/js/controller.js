@@ -480,6 +480,7 @@ $.extend(Controller, {
 
         this.setStartPos(centerX - 5, centerY);
         this.setEndPos(centerX + 5, centerY);
+        this.setEndPos(centerX , centerY);
        
      /*   
         width = 30;
