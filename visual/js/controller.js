@@ -480,7 +480,7 @@ $.extend(Controller, {
 
         this.setStartPos(centerX - 5, centerY);
         this.setEndPos(centerX + 5, centerY);
-        this.setEndPos(centerX , centerY);
+        this.setEndPos2(centerX , centerY);
        
      /*   
         width = 30;
@@ -502,6 +502,11 @@ $.extend(Controller, {
         this.endX = gridX;
         this.endY = gridY;
         View.setEndPos(gridX, gridY);
+    },
+    setEndPos2: function(gridX, gridY) {
+        this.endX2 = gridX;
+        this.endY2 = gridY;
+        View.setEndPos2(gridX, gridY);
     },
     setWalkableAt: function(gridX, gridY, walkable) {
         this.grid.setWalkableAt(gridX, gridY, walkable);
