@@ -469,7 +469,7 @@ $.extend(Controller, {
             endX, endY,
             nodeSize = View.nodeSize;
 
-   /*    width  = $(window).width();
+        width  = $(window).width();
         height = $(window).height();
 
         marginRight = $('#algorithm_panel').width();
@@ -480,8 +480,8 @@ $.extend(Controller, {
 
         this.setStartPos(centerX - 5, centerY);
         this.setEndPos(centerX + 5, centerY);
-        */
-        
+       
+     /*   
         width = 30;
         height = 15;    //this.gridSize[1];
         
@@ -490,7 +490,7 @@ $.extend(Controller, {
         
         this.setStartPos(centerX - 4, centerY);
         this.setEndPos(centerX + 4, centerY);
-        
+        */
     },
     setStartPos: function(gridX, gridY) {
         this.startX = gridX;
