@@ -93,6 +93,11 @@ var Controller = StateMachine.create({
 $.extend(Controller, {
     gridSize: [64, 36], // number of nodes horizontally and vertically
     operationsPerSecond: 300,
+     
+    var GridAttr = Panel.getGridSize();  
+    
+    if(GridAttr === "Small") this.gridSize = [20,10];
+    else if (GridAttr === "Medium") this.gridSize = [40,20];   
 
     /**
      * Asynchronous transition from `none` state to `ready` state.
@@ -469,6 +474,7 @@ $.extend(Controller, {
             endX, endY,
             nodeSize = View.nodeSize;
 
+     /*
         width  = $(window).width();
         height = $(window).height();
 
@@ -482,16 +488,16 @@ $.extend(Controller, {
         this.setEndPos(centerX + 5, centerY);
       //  this.setEndPos2(centerX , centerY);
        
-     /*   
-        width = 30;
-        height = 15;    //this.gridSize[1];
+     */   
+        width = this.gridSize[0];
+        height = this.gridSize[1];
         
         centerX = Math.floor(width/2);
         centerY = Math.floor(height/2);
         
-        this.setStartPos(centerX - 4, centerY);
-        this.setEndPos(centerX + 4, centerY);
-        */
+        this.setStartPos(centerX - 3, centerY);
+        this.setEndPos(centerX + 3, centerY);
+        
     },
     setStartPos: function(gridX, gridY) {
         this.startX = gridX;

@@ -18,6 +18,11 @@ var Panel = {
         $('#play_panel').css({
             top: $algo.offset().top + $algo.outerHeight() + 20
         });
+        
+        $('#GridSize').css({
+            top: $('#instructions_panel').offset().top + $('#instructions_panel').outerHeight() + 20
+        });
+      
         $('#button2').attr('disabled', 'disabled');
     },
     /**
@@ -180,5 +185,21 @@ var Panel = {
         }
 
         return finder;
+    }
+
+    getGridSize: function() {
+         var ele = document.getElementsByName('grid'); 
+              
+            for(i = 0; i < ele.length; i++) { 
+                  
+                if(ele[i].type="radio") { 
+                  
+                    if(ele[i].checked){
+                        console.log(ele[i].value);
+                        return ele[i].value ; 
+                     }
+                } 
+            } 
+   
     }
 };
