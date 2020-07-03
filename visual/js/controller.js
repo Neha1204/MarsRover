@@ -110,7 +110,7 @@ $.extend(Controller, {
        return size;    
     },
 
-    gridSize: this.getGridSize(), // number of nodes horizontally and vertically
+    gridSize: Controller.getGridSize(), // number of nodes horizontally and vertically
     operationsPerSecond: 300,
 
     /**
