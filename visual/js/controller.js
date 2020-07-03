@@ -95,7 +95,7 @@ $.extend(Controller, {
     operationsPerSecond: 300,
      
     var GridAttr = Panel.getGridSize();  
-    
+
     if(GridAttr === "Small") this.gridSize = [20,10];
     else if (GridAttr === "Medium") this.gridSize = [40,20];   
 
