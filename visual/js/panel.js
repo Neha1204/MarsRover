@@ -190,16 +190,11 @@ var Panel = {
     getGridSize: function() {
          var ele = document.getElementsByName('grid'); 
               
-            for(i = 0; i < ele.length; i++) { 
-                  
-                if(ele[i].type="radio") { 
-                  
-                    if(ele[i].checked){
+            for(i = 0; i < ele.length; i++) {           
+                if(ele[i].type="radio" && ele[i].checked ) {
                         console.log(ele[i].value);
                         return ele[i].value ; 
-                     }
                 } 
-            } 
-   
+            }   
     }
 };
