@@ -62,9 +62,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #GridSize {
-    top: 160px;
+    top: 260px;
     left: 20px;
-    width: 160px;
+    width: 150px;
+    position: absolute;
 }
 
 .option_header {
@@ -106,7 +107,7 @@ button:hover {
 .options {
     padding: 2px;
     font-size: 18px;
-    margin: 2px 20px 0;
+    margin: 2px 25px 0;
 }
 
 #stats {
