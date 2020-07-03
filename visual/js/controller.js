@@ -97,14 +97,7 @@ $.extend(Controller, {
 
     getGridSize: function(){ 
       var grid_size_attr, size;
-         var ele = document.getElementsByName('grid'); 
-              
-            for(i = 0; i < ele.length; i++) { 
-                  
-                if(ele[i].type="radio" && ele[i].checked) { 
-                      grid_size_attr = ele[i].value ; 
-                }
-            } 
+       grid_size_attr = $('input[name=grid]:checked').val();
    
        if(grid_size_attr === "Small") size = [20,10];
        else if (grid_size_attr === "Medium") size = [40,20];  
