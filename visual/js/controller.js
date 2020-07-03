@@ -94,10 +94,10 @@ $.extend(Controller, {
     gridSize: [64, 36], // number of nodes horizontally and vertically
     operationsPerSecond: 300,
      
-    var GridAttr = Panel.getGridSize();  
+    GridAttr: Panel.getGridSize();  
 
-    if(GridAttr === "Small") this.gridSize = [20,10];
-    else if (GridAttr === "Medium") this.gridSize = [40,20];   
+    if(this.GridAttr === "Small") this.gridSize = [20,10];
+    else if (this.GridAttr === "Medium") this.gridSize = [40,20];   
 
     /**
      * Asynchronous transition from `none` state to `ready` state.
