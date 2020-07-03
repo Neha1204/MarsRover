@@ -92,6 +92,9 @@ var Controller = StateMachine.create({
 
 $.extend(Controller, {
      
+    gridSize: [64,36], // number of nodes horizontally and vertically
+    operationsPerSecond: 300,
+
     getGridSize: function(){ 
       var grid_size_attr, size;
          var ele = document.getElementsByName('grid'); 
@@ -107,16 +110,14 @@ $.extend(Controller, {
        else if (grid_size_attr === "Medium") size = [40,20];  
        else size = [64,36];
 
-       return size;    
+       this.gridSize = size;    
     },
-
-    gridSize: Controller.getGridSize(), // number of nodes horizontally and vertically
-    operationsPerSecond: 300,
 
     /**
      * Asynchronous transition from `none` state to `ready` state.
      */
     onleavenone: function() {
+        Controller.getGridSize();
         var numCols = this.gridSize[0],
             numRows = this.gridSize[1];
 
@@ -503,6 +504,7 @@ $.extend(Controller, {
       //  this.setEndPos2(centerX , centerY);
        
      */   
+        Controller.getGridSize();
         width = this.gridSize[0];
         height = this.gridSize[1];
         
