@@ -93,19 +93,21 @@ var Controller = StateMachine.create({
 $.extend(Controller, {
      
     getGridSize: function(){ 
-      var GridAttr, size;
+      var grid_size_attr, size;
          var ele = document.getElementsByName('grid'); 
               
             for(i = 0; i < ele.length; i++) { 
                   
                 if(ele[i].type="radio" && ele[i].checked) { 
-                      GridAttr = ele[i].value ; 
+                      grid_size_attr = ele[i].value ; 
                 }
             } 
    
-       if(this.GridAttr === "Small") size = [20,10];
-       else if (this.GridAttr === "Medium") size = [40,20];  
-       else size = [64,36];    
+       if(grid_size_attr === "Small") size = [20,10];
+       else if (grid_size_attr === "Medium") size = [40,20];  
+       else size = [64,36];
+
+       return size;    
     },
 
     gridSize: this.getGridSize(), // number of nodes horizontally and vertically
