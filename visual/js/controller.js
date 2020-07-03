@@ -91,13 +91,25 @@ var Controller = StateMachine.create({
 });
 
 $.extend(Controller, {
-    gridSize: [64, 36], // number of nodes horizontally and vertically
-    operationsPerSecond: 300,
      
-    GridAttr: Panel.getGridSize();  
+    getGridSize: function(){ 
+      var GridAttr, size;
+         var ele = document.getElementsByName('grid'); 
+              
+            for(i = 0; i < ele.length; i++) { 
+                  
+                if(ele[i].type="radio" && ele[i].checked) { 
+                      GridAttr = ele[i].value ; 
+                }
+            } 
+   
+       if(this.GridAttr === "Small") size = [20,10];
+       else if (this.GridAttr === "Medium") size = [40,20];  
+       else size = [64,36];    
+    },
 
-    if(this.GridAttr === "Small") this.gridSize = [20,10];
-    else if (this.GridAttr === "Medium") this.gridSize = [40,20];   
+    gridSize: this.getGridSize(), // number of nodes horizontally and vertically
+    operationsPerSecond: 300,
 
     /**
      * Asynchronous transition from `none` state to `ready` state.
