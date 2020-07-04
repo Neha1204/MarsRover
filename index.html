@@ -52,7 +52,14 @@
             <input type="radio" name="grid" value="Large"/>
             <label class="option_label">Large</label> <br>
          </div>
+     <button id="button_size" class="control_button" onclick = "set_grid()">Set grid size</button>
     </div>
+
+    <script>
+      function set_grid(){
+          Controller.onleavenone();
+      }
+    </script>
 
     <div id="algorithm_panel" class="panel right_panel">
       <header><h2 class="header_title">Select Algorithm</h2></header>
