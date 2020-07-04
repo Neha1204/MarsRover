@@ -392,6 +392,7 @@ $.extend(Controller, {
         View.clearBlockedNodes();
     },
     buildNewGrid: function() {
+
         Controller.getGridSize();
         this.grid = new PF.Grid(this.gridSize[0], this.gridSize[1]);
     },
