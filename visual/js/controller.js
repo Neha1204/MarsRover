@@ -15,7 +15,7 @@ var Controller = StateMachine.create({
         {
             name: 'set',
             from: '*',
-            to:   'reset'
+            to:   'ready'
         },
         {
             name: 'search',
@@ -214,6 +214,15 @@ $.extend(Controller, {
         // => ready
     },
 
+    onset: function(event, from, to) {
+        setTimeout(function() {
+            Controller.clearOperations();
+            Controller.clearAll();
+            Controller.onleavenone();
+        }, View.nodeColorizeEffect.duration * 1.2);
+        // => ready
+    },
+
     /**
      * The following functions are called on entering states.
      */
@@ -246,9 +255,14 @@ $.extend(Controller, {
         console.log('=> starting');
         // Clears any existing search progress
         this.clearFootprints();
-        this.setButtonStates({
+        this.setButtonStates(
+          {
             id: 2,
             enabled: true,
+          },
+          { 
+            id: 4,
+            enabled: false,
         });
         this.search();
         // => searching
@@ -280,6 +294,11 @@ $.extend(Controller, {
             text: 'Cancel Search',
             enabled: true,
             callback: $.proxy(this.cancel, this),
+        }, {
+            id: 4,
+            text: 'Set grid size',
+            enabled: true,
+            callback: $.proxy(this.set, this),
         });
         // => [searching, ready]
     },
@@ -295,6 +314,11 @@ $.extend(Controller, {
             text: 'Clear Path',
             enabled: true,
             callback: $.proxy(this.clear, this),
+        }, {
+            id: 4,
+            text: 'Set grid size',
+            enabled: true,
+            callback: $.proxy(this.set, this),
         });
     },
     onmodified: function() {
@@ -309,6 +333,11 @@ $.extend(Controller, {
             text: 'Clear Path',
             enabled: true,
             callback: $.proxy(this.clear, this),
+        }, {
+            id: 4,
+            text: 'Set grid size',
+            enabled: true,
+            callback: $.proxy(this.set, this),
         });
     },
 
