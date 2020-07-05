@@ -13,6 +13,11 @@ var Controller = StateMachine.create({
             to:   'ready'
         },
         {
+            name: 'set',
+            from: '*',
+            to:   'reset'
+        },
+        {
             name: 'search',
             from: 'starting',
             to:   'searching'
@@ -229,6 +234,11 @@ $.extend(Controller, {
             text: 'Clear Walls',
             enabled: true,
             callback: $.proxy(this.reset, this),
+        }, {
+            id: 4,
+            text: 'Set grid size',
+            enabled: true,
+            callback: $.proxy(this.set, this),
         });
         // => [starting, draggingStart, draggingEnd, drawingStart, drawingEnd]
     },
