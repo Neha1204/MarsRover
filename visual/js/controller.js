@@ -219,6 +219,7 @@ $.extend(Controller, {
             Controller.clearOperations();
             Controller.clearAll();
             Controller.onleavenone();
+            Controller.setDefaultStartEndPos();
         }, View.nodeColorizeEffect.duration * 1.2);
         // => ready
     },
@@ -260,9 +261,11 @@ $.extend(Controller, {
             id: 2,
             enabled: true,
           },
-          { 
+          {
             id: 4,
-            enabled: false,
+            text: 'Set grid size',
+            enabled: true,
+            callback: $.proxy(this.set, this),
         });
         this.search();
         // => searching
@@ -279,6 +282,11 @@ $.extend(Controller, {
             text: 'Pause Search',
             enabled: true,
             callback: $.proxy(this.pause, this),
+        }, {
+            id: 4,
+            text: 'Set grid size',
+            enabled: true,
+            callback: $.proxy(this.set, this),
         });
         // => [paused, finished]
     },
