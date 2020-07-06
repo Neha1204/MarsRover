@@ -211,8 +211,8 @@ $.extend(Controller, {
             Controller.clearOperations();
             Controller.clearAll();
             Controller.buildNewGrid();
-            View.setStartPos(this.startX *this.nodeSize, this.startY *this.nodeSize); 
-            View.setEndPos(this.endX *this.nodeSize, this.endY *this.nodeSize); 
+            View.setStartPos(this.startX, this.startY); 
+            View.setEndPos(this.endX, this.endY); 
         }, View.nodeColorizeEffect.duration * 1.2);
         // => ready
     },
