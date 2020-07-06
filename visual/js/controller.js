@@ -1,3 +1,5 @@
+var Util       = require('../core/Util');
+
 /**
  * The visualization controller will works as a state machine.
  * See files under the `doc` folder for transition descriptions.
@@ -153,9 +155,33 @@ $.extend(Controller, {
 
         timeStart = window.performance ? performance.now() : Date.now();
         grid = this.grid.clone();
-        this.path = finder.findPath(
+
+        var pathA = finder.findPath(
             this.startX, this.startY, this.endX, this.endY, grid
         );
+
+        var pathB = finder.findPath(
+            this.startX, this.startY, this.endX2, this.endY2, grid
+        );
+
+        var pathC = finder.findPath(
+            this.endX, this.endY, this.endX2, this.endY2, grid
+        );
+
+        var lenA = Util.pathlength(pathA), lenB = Util.pathlength(pathB);
+
+        if(lenA < lenB){
+            this.path = pathA.concat(pathC);  
+        }
+        
+        else 
+            this.path = pathB.concat(reverse(pathC));
+
+
+
+      //  this.path = finder.findPath(
+      //      this.startX, this.startY, this.endX, this.endY, grid
+      //  );
         this.operationCount = this.operations.length;
         timeEnd = window.performance ? performance.now() : Date.now();
         this.timeSpent = (timeEnd - timeStart).toFixed(4);
