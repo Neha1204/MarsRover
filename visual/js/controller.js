@@ -1,4 +1,4 @@
-var Util       = require('../src/core/Util');
+
 
 /**
  * The visualization controller will works as a state machine.
@@ -168,7 +168,7 @@ $.extend(Controller, {
             this.endX, this.endY, this.endX2, this.endY2, grid
         );
 
-        var lenA = Util.pathlength(pathA), lenB = Util.pathlength(pathB);
+        var lenA = 1, lenB = 2;
 
         if(lenA < lenB){
             this.path = pathA.concat(pathC);  
