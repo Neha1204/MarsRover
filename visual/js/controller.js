@@ -1,4 +1,4 @@
-var Util       = require('../core/Util');
+var Util       = require('../src/core/Util');
 
 /**
  * The visualization controller will works as a state machine.
