@@ -143,6 +143,20 @@ var View = {
             this.endNode.attr({ x: coord[0], y: coord[1] }).toFront();
         }
     },
+    setEndPos2: function(gridX, gridY) {
+        var coord = this.toPageCoordinate(gridX, gridY);
+        if (!this.endNode2) {
+            this.endNode2 = this.paper.rect(
+                coord[0],
+                coord[1],
+                this.nodeSize,
+                this.nodeSize
+            ).attr(this.nodeStyle.normal)
+             .animate(this.nodeStyle.end, 1000);
+        } else {
+            this.endNode2.attr({ x: coord[0], y: coord[1] }).toFront();
+        }
+    },
     /**
      * Set the attribute of the node at the given coordinate.
      */

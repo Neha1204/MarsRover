@@ -211,8 +211,6 @@ $.extend(Controller, {
             Controller.clearOperations();
             Controller.clearAll();
             Controller.buildNewGrid();
-            View.setStartPos(this.startX, this.startY); 
-            View.setEndPos(this.endX, this.endY); 
         }, View.nodeColorizeEffect.duration * 1.2);
         // => ready
     },
@@ -558,7 +556,7 @@ $.extend(Controller, {
 
         this.setStartPos(centerX - 5, centerY);
         this.setEndPos(centerX + 5, centerY);
-      //  this.setEndPos2(centerX , centerY);
+        this.setEndPos2(centerX , centerY);
        
      */   
         Controller.getGridSize();
@@ -570,7 +568,8 @@ $.extend(Controller, {
         
         this.setStartPos(centerX - 3, centerY);
         this.setEndPos(centerX + 3, centerY);
-        
+        this.setEndPos2(centerX , centerY);
+   
     },
     setStartPos: function(gridX, gridY) {
         this.startX = gridX;
