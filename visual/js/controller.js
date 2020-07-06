@@ -171,14 +171,12 @@ $.extend(Controller, {
         var lenA = Util.pathlength(pathA), lenB = Util.pathlength(pathB);
 
         if(lenA < lenB){
-            console.log("A");
             this.path = pathA.concat(pathC);  
         }
         
-        else{
-            console.log("B"); 
+        else 
             this.path = pathB.concat(reverse(pathC));
-        }
+
 
 
       //  this.path = finder.findPath(
