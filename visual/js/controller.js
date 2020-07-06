@@ -218,8 +218,7 @@ $.extend(Controller, {
         setTimeout(function() {
             Controller.clearOperations();
             Controller.clearAll();
-            Controller.onleavenone();
-            Controller.setDefaultStartEndPos();
+            Controller.buildNewGrid();
         }, View.nodeColorizeEffect.duration * 1.2);
         // => ready
     },
@@ -440,7 +439,21 @@ $.extend(Controller, {
     },
     buildNewGrid: function() {
         Controller.getGridSize();
-        this.grid = new PF.Grid(this.gridSize[0], this.gridSize[1]);
+        var numCols = this.gridSize[0],
+            numRows = this.gridSize[1];
+
+        this.grid = new PF.Grid(numCols, numRows);
+
+        View.init({
+            numCols: numCols,
+            numRows: numRows
+        });
+        View.generateGrid(function() {
+            Controller.setDefaultStartEndPos();
+            Controller.bindEvents();
+            Controller.transition(); // transit to the next state (ready)
+        });
+
     },
     mousedown: function (event) {
         var coord = View.toGridCoordinate(event.pageX, event.pageY),
