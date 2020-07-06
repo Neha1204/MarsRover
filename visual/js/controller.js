@@ -205,16 +205,19 @@ $.extend(Controller, {
     onmodify: function(event, from, to) {
         // => modified
     },
-    onreset: function(event, from, to) {
+    onset: function(event, from, to) {
+        console.log("Onset");
         setTimeout(function() {
             Controller.clearOperations();
             Controller.clearAll();
             Controller.buildNewGrid();
+            View.setStartPos(this.startX *this.nodeSize, this.startY *this.nodeSize); 
+            View.setEndPos(this.endX *this.nodeSize, this.endY *this.nodeSize); 
         }, View.nodeColorizeEffect.duration * 1.2);
         // => ready
     },
 
-    onset: function(event, from, to) {
+    onreset: function(event, from, to) {
         setTimeout(function() {
             Controller.clearOperations();
             Controller.clearAll();
