@@ -3,7 +3,7 @@
  * It uses raphael.js to show the grids.
  */
 var View = {
-    nodeSize: 30, // width and height of a single node, in pixel
+    nodeSize: 35, // width and height of a single node, in pixel
     nodeStyle: {
         normal: {
             fill: 'white',
@@ -14,7 +14,7 @@ var View = {
             'stroke-opacity': 0.2,
         },
         start: {
-            fill: '#0d0',
+            fill: ['#0d0', 'yellow' , 'blue'],
             'stroke-opacity': 0.2,
         },
         end: {
@@ -22,11 +22,11 @@ var View = {
             'stroke-opacity': 0.2,
         },
         opened: {
-            fill: '#98fb98',
+            fill: 'white',
             'stroke-opacity': 0.2,
         },
         closed: {
-            fill: '#afeeee',
+            fill: 'white',
             'stroke-opacity': 0.2,
         },
         failed: {
@@ -43,11 +43,11 @@ var View = {
     },
     nodeZoomEffect: {
         duration: 200,
-        transform: 's1.2', // scale by 1.2x
+        transform: 's1.2', // scale by 1.2xz 
         transformBack: 's1.0',
     },
     pathStyle: {
-        stroke: 'yellow',
+        stroke: ['#0d0', 'yellow', 'blue'],
         'stroke-width': 3,
     },
     supportedOperations: ['opened', 'closed', 'tested'],
@@ -115,46 +115,71 @@ var View = {
             }
         });
     },
-    setStartPos: function(gridX, gridY) {
+    setStartPos: function(gridX, gridY, n) {
         var coord = this.toPageCoordinate(gridX, gridY);
-        if (!this.startNode) {
-            this.startNode = this.paper.rect(
+        if (!this.endNode)  {
+			this.endNode = new Array;
+            this.endNode[n] = this.paper.rect(
                 coord[0],
                 coord[1],
                 this.nodeSize,
                 this.nodeSize
             ).attr(this.nodeStyle.normal)
-             .animate(this.nodeStyle.start, 1000);
-        } else {
-            this.startNode.attr({ x: coord[0], y: coord[1] }).toFront();
+             .animate({fill: this.nodeStyle.start.fill[n], 'stroke-opacity': 0.2 }, 1000);
+			 
+        }
+		else if(!this.endNode[n]){
+	
+			this.endNode[n] = this.paper.rect(
+                coord[0],
+                coord[1],
+                this.nodeSize,
+                this.nodeSize
+            ).attr(this.nodeStyle.normal)
+             .animate({fill: this.nodeStyle.start.fill[n], 'stroke-opacity': 0.2 }, 1000);
+		}
+		else {
+            this.endNode[n].attr({ x: coord[0], y: coord[1] }).toFront();
         }
     },
-    setEndPos: function(gridX, gridY) {
+	
+	setRoverPos: function(gridX, gridY, n) {
         var coord = this.toPageCoordinate(gridX, gridY);
-        if (!this.endNode) {
-            this.endNode = this.paper.rect(
+        if (!this.img)  {
+			this.img = new Array;
+			this.img[n] = this.paper.image( './visual/js/mars_rover.png', coord[0], coord[1], this.nodeSize, this.nodeSize ); 
+        }
+		else if(!this.img[n]){
+			this.img[n] =  this.paper.image( './visual/js/mars_rover.png', coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
+		}
+		else {
+			this.img[n].remove();
+			this.img[n] =  this.paper.image( './visual/js/mars_rover.png', coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
+        }
+    },
+    setEndPos: function(gridX, gridY, n) {
+        var coord = this.toPageCoordinate(gridX, gridY);
+        if (!this.endNode)  {
+			this.endNode = new Array;
+            this.endNode[n] = this.paper.rect(
                 coord[0],
                 coord[1],
                 this.nodeSize,
                 this.nodeSize
             ).attr(this.nodeStyle.normal)
              .animate(this.nodeStyle.end, 1000);
-        } else {
-            this.endNode.attr({ x: coord[0], y: coord[1] }).toFront();
         }
-    },
-    setEndPos2: function(gridX, gridY) {
-        var coord = this.toPageCoordinate(gridX, gridY);
-        if (!this.endNode2) {
-            this.endNode2 = this.paper.rect(
+		else if(!this.endNode[n]){
+			this.endNode[n] = this.paper.rect(
                 coord[0],
                 coord[1],
                 this.nodeSize,
                 this.nodeSize
             ).attr(this.nodeStyle.normal)
              .animate(this.nodeStyle.end, 1000);
-        } else {
-            this.endNode2.attr({ x: coord[0], y: coord[1] }).toFront();
+		}
+		else {
+            this.endNode[n].attr({ x: coord[0], y: coord[1] }).toFront();
         }
     },
     /**
@@ -255,12 +280,15 @@ var View = {
             }
         }
     },
-    drawPath: function(path) {
+    drawPath: function(path, n) {
         if (!path.length) {
             return;
         }
         var svgPath = this.buildSvgPath(path);
-        this.path = this.paper.path(svgPath).attr(this.pathStyle);
+		
+		if(!this.path) this.path = new Array;
+		
+        this.path[n] = this.paper.path(svgPath).attr({stroke: this.pathStyle.stroke[n], 'stroke-width': 3});
     },
     /**
      * Given a path, build its SVG represention.
@@ -279,7 +307,9 @@ var View = {
     },
     clearPath: function() {
         if (this.path) {
-            this.path.remove();
+            this.path[0].remove();
+			this.path[1].remove();
+			this.path[2].remove();
         }
     },
     /**

@@ -74,6 +74,16 @@ var Controller = StateMachine.create({
             from: ['ready', 'finished'],
             to:   'draggingStart'
         },
+		{
+            name: 'dragStart2',
+            from: ['ready', 'finished'],
+            to:   'draggingStart2'
+        },
+		{
+            name: 'dragStart3',
+            from: ['ready', 'finished'],
+            to:   'draggingStart3'
+        },
         {
             name: 'dragEnd',
             from: ['ready', 'finished'],
@@ -91,7 +101,7 @@ var Controller = StateMachine.create({
         },
         {
             name: 'rest',
-            from: ['draggingStart', 'draggingEnd', 'drawingWall', 'erasingWall'],
+            from: ['draggingStart', 'draggingStart2', 'draggingStart3', 'draggingEnd', 'drawingWall', 'erasingWall'],
             to  : 'ready'
         },
     ],
@@ -103,14 +113,10 @@ $.extend(Controller, {
     operationsPerSecond: 300,
 
     getGridSize: function(){ 
-      var grid_size_attr, size;
-       grid_size_attr = $('input[name=grid]:checked').val();
-   
-       if(grid_size_attr === "Small") size = [20,10];
-       else if (grid_size_attr === "Medium") size = [40,20];  
-       else size = [64,36];
-
-       this.gridSize = size;    
+        var w = Math.floor($(window).width()/View.nodeSize) +1,
+              h = Math.floor($(window).height()/View.nodeSize) + 1;
+          console.log(w, h);
+          this.gridSize = [w,h];          
     },
 
     /**
@@ -127,6 +133,9 @@ $.extend(Controller, {
             numCols: numCols,
             numRows: numRows
         });
+		
+		this.endNodes = new Array;
+		
         View.generateGrid(function() {
             Controller.setDefaultStartEndPos();
             Controller.bindEvents();
@@ -154,34 +163,14 @@ $.extend(Controller, {
             finder = Panel.getFinder();
 
         timeStart = window.performance ? performance.now() : Date.now();
-        grid = this.grid.clone();
-
-        var pathA = finder.findPath(
-            this.startX, this.startY, this.endX, this.endY, grid
-        );
-
-        var pathB = finder.findPath(
-            this.startX, this.startY, this.endX2, this.endY2, grid
-        );
-
-        var pathC = finder.findPath(
-            this.endX, this.endY, this.endX2, this.endY2, grid
-        );
-
-        var lenA = 1, lenB = 2;
-
-        if(lenA < lenB){
-            this.path = pathA.concat(pathC);  
-        }
         
-        else 
-            this.path = pathB.concat(reverse(pathC));
+		var winnerNo = {a: 0};
 
-
-
-      //  this.path = finder.findPath(
-      //      this.startX, this.startY, this.endX, this.endY, grid
-      //  );
+        var graph = this.makeGraph(this.endNodes, winnerNo);
+        this.grap = graph;
+        this.path = graph[winnerNo.a][1];  
+		this.winner = winnerNo.a;
+		
         this.operationCount = this.operations.length;
         timeEnd = window.performance ? performance.now() : Date.now();
         this.timeSpent = (timeEnd - timeStart).toFixed(4);
@@ -189,6 +178,31 @@ $.extend(Controller, {
         this.loop();
         // => searching
     },
+	makeGraph: function(endNodes, winnerNo){
+        var n = endNodes.length;
+        var graph = new Array(n-1); 
+		var win_len = 100000;
+
+        for(var i = 0; i < graph.length; i++){
+          
+                var Grid,finder = Panel.getFinder();
+                Grid = this.grid.clone();
+
+                var dist = finder.findPath(
+                  endNodes[i][0], endNodes[i][1], endNodes[n-1][0], endNodes[n-1][1], Grid
+                );
+				
+                var len = PF.Util.pathLength(dist);
+		          
+				if(len< win_len) {winnerNo.a = i;  win_len = len; }
+				  
+                graph[i] = new Array(2);
+                graph[i][0]=len;
+                graph[i][1]= dist;
+        }
+       
+        return graph;
+	},	
     onrestart: function() {
         // When clearing the colorized nodes, there may be
         // nodes still animating, which is an asynchronous procedure.
@@ -214,13 +228,33 @@ $.extend(Controller, {
         this.clearFootprints();
         // => ready
     },
+	
+	display: function(path, i){
+	    
+		View.setRoverPos(path[0][1][i][0], path[0][1][i][1], 0);
+		View.setRoverPos(path[1][1][i][0], path[1][1][i][1], 1);
+		View.setRoverPos(path[2][1][i][0], path[2][1][i][1], 2);
+		View.setRoverPos(path[2][1][i][0], path[2][1][i][1], 2);
+		
+	},	
+	
     onfinish: function(event, from, to) {
         View.showStats({
             pathLength: PF.Util.pathLength(this.path),
             timeSpent:  this.timeSpent,
             operationCount: this.operationCount,
         });
-        View.drawPath(this.path);
+		
+		var path = this.grap;
+		console.log(path);
+		
+		for(var i=1; i<this.path.length; i++){
+			setTimeout(this.display(path, i), 2000*i);
+		}	
+				
+        View.drawPath(path[0][1], 0);
+		View.drawPath(path[1][1], 1);
+		View.drawPath(path[2][1], 2);
         // => finished
     },
     onclear: function(event, from, to) {
@@ -232,7 +266,6 @@ $.extend(Controller, {
         // => modified
     },
     onset: function(event, from, to) {
-        console.log("Onset");
         setTimeout(function() {
             Controller.clearOperations();
             Controller.clearAll();
@@ -465,22 +498,7 @@ $.extend(Controller, {
         View.clearBlockedNodes();
     },
     buildNewGrid: function() {
-        Controller.getGridSize();
-        var numCols = this.gridSize[0],
-            numRows = this.gridSize[1];
-
-        this.grid = new PF.Grid(numCols, numRows);
-
-        View.init({
-            numCols: numCols,
-            numRows: numRows
-        });
-        View.generateGrid(function() {
-            Controller.setDefaultStartEndPos();
-            Controller.bindEvents();
-            Controller.transition(); // transit to the next state (ready)
-        });
-
+        this.grid = new PF.Grid(this.gridSize[0], this.gridSize[1]);
     },
     mousedown: function (event) {
         var coord = View.toGridCoordinate(event.pageX, event.pageY),
@@ -488,11 +506,19 @@ $.extend(Controller, {
             gridY = coord[1],
             grid  = this.grid;
 
-        if (this.can('dragStart') && this.isStartPos(gridX, gridY)) {
+        if (this.can('dragStart') && this.isStartPos(gridX, gridY,0)) {
             this.dragStart();
             return;
         }
-        if (this.can('dragEnd') && this.isEndPos(gridX, gridY)) {
+		if (this.can('dragStart2') && this.isStartPos(gridX, gridY,1)) {
+            this.dragStart2();
+            return;
+        }
+		if (this.can('dragStart3') && this.isStartPos(gridX, gridY,2)) {
+            this.dragStart3();
+            return;
+        }
+        if (this.can('dragEnd') && this.isEndPos(gridX, gridY, 3)) {
             this.dragEnd();
             return;
         }
@@ -517,12 +543,22 @@ $.extend(Controller, {
         switch (this.current) {
         case 'draggingStart':
             if (grid.isWalkableAt(gridX, gridY)) {
-                this.setStartPos(gridX, gridY);
+                this.setStartPos(gridX, gridY,0);
+            }
+            break;
+		case 'draggingStart2':
+            if (grid.isWalkableAt(gridX, gridY)) {
+                this.setStartPos(gridX, gridY,1);
+            }
+            break;
+		case 'draggingStart3':
+            if (grid.isWalkableAt(gridX, gridY)) {
+                this.setStartPos(gridX, gridY,2);
             }
             break;
         case 'draggingEnd':
             if (grid.isWalkableAt(gridX, gridY)) {
-                this.setEndPos(gridX, gridY);
+                this.setEndPos(gridX, gridY,3);
             }
             break;
         case 'drawingWall':
@@ -570,9 +606,8 @@ $.extend(Controller, {
             endX, endY,
             nodeSize = View.nodeSize;
 
-     /*
-        width  = $(window).width();
-        height = $(window).height();
+        width  = this.gridSize[0]*30;
+        height = this.gridSize[1]*30;
 
         marginRight = $('#algorithm_panel').width();
         availWidth = width - marginRight;
@@ -580,49 +615,36 @@ $.extend(Controller, {
         centerX = Math.ceil(availWidth / 2 / nodeSize);
         centerY = Math.floor(height / 2 / nodeSize);
 
-        this.setStartPos(centerX - 5, centerY);
-        this.setEndPos(centerX + 5, centerY);
-        this.setEndPos2(centerX , centerY);
-       
-     */   
-        Controller.getGridSize();
-        width = this.gridSize[0];
-        height = this.gridSize[1];
-        
-        centerX = Math.floor(width/2);
-        centerY = Math.floor(height/2);
-        
-        this.setStartPos(centerX - 3, centerY);
-        this.setEndPos(centerX + 3, centerY);
-        this.setEndPos2(centerX , centerY);
+        this.setStartPos(centerX - 5, centerY-5, 0);
+		this.setStartPos(centerX - 5, centerY, 1);
+		this.setStartPos(centerX - 5, centerY+5, 2);
+        this.setEndPos(centerX + 5, centerY, 3);
    
     },
-    setStartPos: function(gridX, gridY) {
-        this.startX = gridX;
-        this.startY = gridY;
-        View.setStartPos(gridX, gridY);
+    setStartPos: function(gridX, gridY, n) {
+        this.endNodes[n] = [gridX, gridY];
+        View.setStartPos(gridX, gridY, n);
+		View.setRoverPos(gridX, gridY, n);
     },
-    setEndPos: function(gridX, gridY) {
-        this.endX = gridX;
-        this.endY = gridY;
-        View.setEndPos(gridX, gridY);
-    },
-    setEndPos2: function(gridX, gridY) {
-        this.endX2 = gridX;
-        this.endY2 = gridY;
-        View.setEndPos2(gridX, gridY);
+    setEndPos: function(gridX, gridY, n) {
+        this.endNodes[n] = [gridX, gridY];
+        View.setEndPos(gridX, gridY, n);
     },
     setWalkableAt: function(gridX, gridY, walkable) {
-        this.grid.setWalkableAt(gridX, gridY, walkable);
-        View.setAttributeAt(gridX, gridY, 'walkable', walkable);
+		if(this.grid.isInside(gridX, gridY)){
+           this.grid.setWalkableAt(gridX, gridY, walkable);
+           View.setAttributeAt(gridX, gridY, 'walkable', walkable);
+        }
+	},
+    isStartPos: function(gridX, gridY, n) {
+		if(this.endNodes[n] === undefined) return false;
+        return gridX === this.endNodes[n][0] && gridY === this.endNodes[n][1];
     },
-    isStartPos: function(gridX, gridY) {
-        return gridX === this.startX && gridY === this.startY;
-    },
-    isEndPos: function(gridX, gridY) {
-        return (gridX === this.endX && gridY === this.endY) || (gridX === this.endX2 && gridY === this.endY2) ;
+    isEndPos: function(gridX, gridY, n) {
+        if(this.endNodes[n] === undefined) return false;
+		return (gridX === this.endNodes[n][0] && gridY === this.endNodes[n][1]);
     },
     isStartOrEndPos: function(gridX, gridY) {
-        return this.isStartPos(gridX, gridY) || this.isEndPos(gridX, gridY);
+        return this.isStartPos(gridX, gridY,0) || this.isStartPos(gridX, gridY,1) || this.isStartPos(gridX, gridY,2) || this.isEndPos(gridX, gridY,3);
     },
 });
