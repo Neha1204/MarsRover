@@ -194,7 +194,7 @@ $.extend(Controller, {
 				
                 var len = PF.Util.pathLength(dist);
 		          
-				if(len< win_len) {winnerNo.a = i;  win_len = len; }
+				if(len< win_len) {winnerNo.a = i;  win_len = len; this.winner = i; }
 				  
                 graph[i] = new Array(2);
                 graph[i][0]=len;
@@ -249,12 +249,17 @@ $.extend(Controller, {
 		console.log(path);
 		
 		for(var i=1; i<this.path.length; i++){
-			setTimeout(this.display(path, i), 2000*i);
+			setTimeout(this.display(path, i), 1000*i);
 		}	
 				
         View.drawPath(path[0][1], 0);
 		View.drawPath(path[1][1], 1);
 		View.drawPath(path[2][1], 2);
+		
+		setTimeout(function(){
+			window.alert("Congrats, rover " + Controller.winner + " won");
+		}, 1000); 
+		
         // => finished
     },
     onclear: function(event, from, to) {
