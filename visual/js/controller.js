@@ -186,10 +186,10 @@ $.extend(Controller, {
         for(var i = 0; i < graph.length; i++){
           
                 var Grid,finder = Panel.getFinder();
-                Grid = this.grid.clone();
+                Grid = this.grid.clone(i);
 
                 var dist = finder.findPath(
-                  endNodes[i][0], endNodes[i][1], endNodes[n-1][0], endNodes[n-1][1], Grid
+                  endNodes[i][0], endNodes[i][1], endNodes[n-1][0], endNodes[n-1][1], Grid, i
                 );
 				
                 var len = PF.Util.pathLength(dist);
@@ -424,7 +424,8 @@ $.extend(Controller, {
                     x: this.x,
                     y: this.y,
                     attr: 'opened',
-                    value: v
+                    value: v,
+                    s: this.s 
                 });
             },
             get closed() {
@@ -436,7 +437,8 @@ $.extend(Controller, {
                     x: this.x,
                     y: this.y,
                     attr: 'closed',
-                    value: v
+                    value: v,
+                    s: this.s
                 });
             },
             get tested() {
@@ -448,7 +450,8 @@ $.extend(Controller, {
                     x: this.x,
                     y: this.y,
                     attr: 'tested',
-                    value: v
+                    value: v,
+                    s: this.s
                 });
             },
         };
@@ -484,7 +487,7 @@ $.extend(Controller, {
             isSupported = View.supportedOperations.indexOf(op.attr) !== -1;
         } while (!isSupported);
 
-        View.setAttributeAt(op.x, op.y, op.attr, op.value);
+        View.setAttributeAt(op.x, op.y, op.attr, op.value, op.s);
     },
     clearOperations: function() {
         this.operations = [];
@@ -633,7 +636,7 @@ $.extend(Controller, {
     setWalkableAt: function(gridX, gridY, walkable) {
 		if(this.grid.isInside(gridX, gridY)){
            this.grid.setWalkableAt(gridX, gridY, walkable);
-           View.setAttributeAt(gridX, gridY, 'walkable', walkable);
+           View.setAttributeAt(gridX, gridY, 'walkable', walkable,0);
         }
 	},
     isStartPos: function(gridX, gridY, n) {

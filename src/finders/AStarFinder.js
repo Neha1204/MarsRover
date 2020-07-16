@@ -51,7 +51,7 @@ function AStarFinder(opt) {
  * @return {Array<Array<number>>} The path, including both start and
  *     end positions.
  */
-AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
+AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid,s) {
     var openList = new Heap(function(nodeA, nodeB) {
             return nodeA.f - nodeB.f;
         }),
@@ -76,6 +76,7 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
         // pop the position of node which has the minimum `f` value.
         node = openList.pop();
         node.closed = true;
+        node.s = s;
 
         // if reached the end position, construct the path and return it
         if (node === endNode) {
@@ -109,6 +110,7 @@ AStarFinder.prototype.findPath = function(startX, startY, endX, endY, grid) {
                 if (!neighbor.opened) {
                     openList.push(neighbor);
                     neighbor.opened = true;
+                    neighbor.s = s;
                 } else {
                     // the neighbor can be reached with smaller cost.
                     // Since its f value has been updated, we have to

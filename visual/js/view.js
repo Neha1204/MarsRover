@@ -22,11 +22,11 @@ var View = {
             'stroke-opacity': 0.2,
         },
         opened: {
-            fill: 'white',
+            fill: ['#0d0', 'yellow' , 'blue'],
             'stroke-opacity': 0.2,
         },
         closed: {
-            fill: 'white',
+            fill: ['#76eec6', '#eed5b7', '#00cdcd'],
             'stroke-opacity': 0.2,
         },
         failed: {
@@ -185,7 +185,7 @@ var View = {
     /**
      * Set the attribute of the node at the given coordinate.
      */
-    setAttributeAt: function(gridX, gridY, attr, value) {
+    setAttributeAt: function(gridX, gridY, attr, value,n) {
         var color, nodeStyle = this.nodeStyle;
         switch (attr) {
         case 'walkable':
@@ -193,11 +193,11 @@ var View = {
             this.setWalkableAt(gridX, gridY, value);
             break;
         case 'opened':
-            this.colorizeNode(this.rects[gridY][gridX], nodeStyle.opened.fill);
+            this.colorizeNode(this.rects[gridY][gridX], nodeStyle.opened.fill[n]);
             this.setCoordDirty(gridX, gridY, true);
             break;
         case 'closed':
-            this.colorizeNode(this.rects[gridY][gridX], nodeStyle.closed.fill);
+            this.colorizeNode(this.rects[gridY][gridX], nodeStyle.closed.fill[n]);
             this.setCoordDirty(gridX, gridY, true);
             break;
         case 'tested':
