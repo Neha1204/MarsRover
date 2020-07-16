@@ -53,7 +53,7 @@ Grid.prototype._buildNodes = function(width, height, matrix) {
     for (i = 0; i < height; ++i) {
         nodes[i] = new Array(width);
         for (j = 0; j < width; ++j) {
-            nodes[i][j] = new Node(j, i);
+            nodes[i][j] = new Node(j, i, s);
         }
     }
 
@@ -219,7 +219,7 @@ Grid.prototype.getNeighbors = function(node, diagonalMovement) {
  * Get a clone of this grid.
  * @return {Grid} Cloned grid.
  */
-Grid.prototype.clone = function() {
+Grid.prototype.clone = function(s) {
     var i, j,
 
         width = this.width,
@@ -229,10 +229,16 @@ Grid.prototype.clone = function() {
         newGrid = new Grid(width, height),
         newNodes = new Array(height);
 
+        for (i = 0; i < height; ++i) {
+            for (j = 0; j < width; ++j) {
+                thisNodes[i][j].s = s;
+            }
+        }
+
     for (i = 0; i < height; ++i) {
         newNodes[i] = new Array(width);
         for (j = 0; j < width; ++j) {
-            newNodes[i][j] = new Node(j, i, thisNodes[i][j].walkable);
+            newNodes[i][j] = new Node(j, i, thisNodes[i][j].walkable,thisNodes[i][j].s);
         }
     }
 

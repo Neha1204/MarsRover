@@ -7,7 +7,7 @@
  * @param {number} y - The y coordinate of the node on the grid.
  * @param {boolean} [walkable] - Whether this node is walkable.
  */
-function Node(x, y, walkable) {
+function Node(x, y, walkable,s) {
     /**
      * The x coordinate of the node on the grid.
      * @type number
@@ -18,6 +18,7 @@ function Node(x, y, walkable) {
      * @type number
      */
     this.y = y;
+    this.s = s;
     /**
      * Whether this node can be walked through.
      * @type boolean
