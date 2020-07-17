@@ -110,7 +110,7 @@ var Controller = StateMachine.create({
 $.extend(Controller, {
      
     gridSize: [64,36], // number of nodes horizontally and vertically
-    operationsPerSecond: 300,
+    operationsPerSecond: 20,
 
     getGridSize: function(){ 
         var w = Math.floor($(window).width()/View.nodeSize) +1,
@@ -178,7 +178,7 @@ $.extend(Controller, {
         this.loop();
         // => searching
     },
-	makeGraph: function(endNodes, winnerNo){
+    makeGraph: function(endNodes, winnerNo){
         var n = endNodes.length;
         var graph = new Array(n-1); 
 		var win_len = 100000;
@@ -194,7 +194,7 @@ $.extend(Controller, {
 				
                 var len = PF.Util.pathLength(dist);
 		          
-				if(len< win_len) {winnerNo.a = i;  win_len = len; this.winner = i; }
+		if(len< win_len) {winnerNo.a = i;  win_len = len; this.winner = i; }
 				  
                 graph[i] = new Array(2);
                 graph[i][0]=len;
@@ -212,6 +212,9 @@ $.extend(Controller, {
         setTimeout(function() {
             Controller.clearOperations();
             Controller.clearFootprints();
+			View.setRoverPos(Controller.endNodes[0][0], Controller.endNodes[0][1], 0);
+			View.setRoverPos(Controller.endNodes[1][0], Controller.endNodes[1][1], 1);
+			View.setRoverPos(Controller.endNodes[2][0], Controller.endNodes[2][1], 2);
             Controller.start();
         }, View.nodeColorizeEffect.duration * 1.2);
         // => restarting
@@ -234,7 +237,8 @@ $.extend(Controller, {
 		View.setRoverPos(path[0][1][i][0], path[0][1][i][1], 0);
 		View.setRoverPos(path[1][1][i][0], path[1][1][i][1], 1);
 		View.setRoverPos(path[2][1][i][0], path[2][1][i][1], 2);
-		View.setRoverPos(path[2][1][i][0], path[2][1][i][1], 2);
+		
+		//setTimeout(Controller.display(path, i+1), i*1000);
 		
 	},	
 	
@@ -247,17 +251,18 @@ $.extend(Controller, {
 		
 		var path = this.grap;
 		console.log(path);
+		var p = this.path.length;
 		
-		for(var i=1; i<this.path.length; i++){
-			setTimeout(this.display(path, i), 1000*i);
-		}	
-				
-        View.drawPath(path[0][1], 0);
+			for(var i=1; i<p; i++){
+			   setTimeout(Controller.display(path, i), 1000*i);
+		    }
+		
+		View.drawPath(path[0][1], 0);
 		View.drawPath(path[1][1], 1);
-		View.drawPath(path[2][1], 2);
+        View.drawPath(path[2][1], 2);
 		
 		setTimeout(function(){
-			window.alert("Congrats, rover " + Controller.winner + " won");
+		 	window.alert("Congrats, rover " + Controller.winner + " won");
 		}, 1000); 
 		
         // => finished
@@ -624,8 +629,8 @@ $.extend(Controller, {
         centerY = Math.floor(height / 2 / nodeSize);
 
         this.setStartPos(centerX - 5, centerY-5, 0);
-		this.setStartPos(centerX - 5, centerY, 1);
-		this.setStartPos(centerX - 5, centerY+5, 2);
+	    this.setStartPos(centerX - 5, centerY, 1);
+	    this.setStartPos(centerX - 5, centerY+5, 2);
         this.setEndPos(centerX + 5, centerY, 3);
    
     },

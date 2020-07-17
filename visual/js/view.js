@@ -14,7 +14,7 @@ var View = {
             'stroke-opacity': 0.2,
         },
         start: {
-            fill: ['#0d0', 'yellow' , 'blue'],
+            fill: ['#cdc1c5', '#f4a460', '#5f9ea0'],
             'stroke-opacity': 0.2,
         },
         end: {
@@ -26,7 +26,7 @@ var View = {
             'stroke-opacity': 0.2,
         },
         closed: {
-            fill: ['#76eec6', '#eed5b7', '#00cdcd'],
+            fill: ['#76eec6', '#ffd39b', '#00cdcd'],
             'stroke-opacity': 0.2,
         },
         failed: {
@@ -47,9 +47,10 @@ var View = {
         transformBack: 's1.0',
     },
     pathStyle: {
-        stroke: ['#0d0', 'yellow', 'blue'],
+        stroke: ['#cdc1c5', '#f4a460', '#5f9ea0'],
         'stroke-width': 3,
     },
+	roverimg: ['./visual/js/mars_rover.png', './visual/js/mars_rover2.png', './visual/js/mars_rover3.png'],
     supportedOperations: ['opened', 'closed', 'tested'],
     init: function(opts) {
         this.numCols      = opts.numCols;
@@ -147,14 +148,14 @@ var View = {
         var coord = this.toPageCoordinate(gridX, gridY);
         if (!this.img)  {
 			this.img = new Array;
-			this.img[n] = this.paper.image( './visual/js/mars_rover.png', coord[0], coord[1], this.nodeSize, this.nodeSize ); 
+			this.img[n] = this.paper.image( this.roverimg[n], coord[0], coord[1], this.nodeSize, this.nodeSize ); 
         }
 		else if(!this.img[n]){
-			this.img[n] =  this.paper.image( './visual/js/mars_rover.png', coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
+			this.img[n] =  this.paper.image( this.roverimg[n], coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
 		}
 		else {
 			this.img[n].remove();
-			this.img[n] =  this.paper.image( './visual/js/mars_rover.png', coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
+			this.img[n] =  this.paper.image( this.roverimg[n], coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
         }
     },
     setEndPos: function(gridX, gridY, n) {
