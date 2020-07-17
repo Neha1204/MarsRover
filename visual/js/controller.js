@@ -111,6 +111,7 @@ $.extend(Controller, {
      
     gridSize: [64,36], // number of nodes horizontally and vertically
     operationsPerSecond: 300,
+	RoverImg: ['./visual/js/mars_rover.png', './visual/js/mars_rover2.png', './visual/js/mars_rover3.png'],
 
     getGridSize: function(){ 
         var w = Math.floor($(window).width()/View.nodeSize) +1,
@@ -143,7 +144,7 @@ $.extend(Controller, {
         });
 
         var x = document.getElementById("WelcomeMsg");
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2500);
         this.$buttons = $('.control_button');
 
         this.hookPathFinding();
@@ -261,8 +262,13 @@ $.extend(Controller, {
 		View.drawPath(path[1][1], 1);
         View.drawPath(path[2][1], 2);
 		
-		var x = document.getElementById("WinMsg");
-		x.innerHTML = "Congrats, rover " + (Controller.winner +1) + " won" + "<img src= './visual/js/mars_rover2.png'/>";
+		var imgs = [ "<img src= './visual/js/mars_rover.png' width=35% height=35%/>" , 
+		             "<img src= './visual/js/mars_rover2.png' width=40% height=70%/>" ,
+		             "<img src= './visual/js/mars_rover3.png' width=40% height=40%/>"
+		];
+		
+		var x = document.getElementById("WinMsg");	
+		x.innerHTML = "Congrats, rover " + (Controller.winner +1) + " won" + "<br>" + imgs[Controller.winner] ;
         setTimeout(function(){ x.className = x.className.replace("", "show"); }, 1000);
         setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 		
@@ -271,6 +277,7 @@ $.extend(Controller, {
     onclear: function(event, from, to) {
         this.clearOperations();
         this.clearFootprints();
+        // => ready
         // => ready
     },
     onmodify: function(event, from, to) {

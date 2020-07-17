@@ -169,6 +169,8 @@ var View = {
                 this.nodeSize
             ).attr(this.nodeStyle.normal)
              .animate(this.nodeStyle.end, 1000);
+			 
+			this.img_end = this.paper.image( './visual/js/race_end.png', coord[0], coord[1], this.nodeSize, this.nodeSize );
         }
 		else if(!this.endNode[n]){
 			this.endNode[n] = this.paper.rect(
@@ -178,9 +180,12 @@ var View = {
                 this.nodeSize
             ).attr(this.nodeStyle.normal)
              .animate(this.nodeStyle.end, 1000);
+			 this.img_end = this.paper.image( './visual/js/race_end.png', coord[0], coord[1], this.nodeSize, this.nodeSize );
 		}
 		else {
             this.endNode[n].attr({ x: coord[0], y: coord[1] }).toFront();
+			this.img_end.remove();
+			this.img_end = this.paper.image( './visual/js/race_end.png', coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
         }
     },
     /**

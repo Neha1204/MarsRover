@@ -115,26 +115,16 @@ h1, h2, h3, h4, h5, h6 {
   position: fixed;
   z-index: 1;
   left: 40%;
-  top: 50px;
+  top: 30px;
   font-size: 17px;
-  width: 300px;
+  width: 200px;
+  line-height: 2.5em; 
 }
 
 #WinMsg.show {
   visibility: visible;
-  animation: fadei 0.5s, fadeo 0.5s 3.5s;
+  animation: fadein 0.5s, fadeout 0.5s 3.5s;
 }
-
-@keyframes fadei {
-  from {top: 0; opacity: 0;}
-  to {top: 50px; opacity: 1;}
-}
-
-@keyframes fadeo {
-  from {top: 50px; opacity: 1;}
-  to {top: 0; opacity: 0;}
-}
-
 
 .option_header {
     font-size: 80%;
