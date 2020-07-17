@@ -110,7 +110,7 @@ var Controller = StateMachine.create({
 $.extend(Controller, {
      
     gridSize: [64,36], // number of nodes horizontally and vertically
-    operationsPerSecond: 20,
+    operationsPerSecond: 300,
 
     getGridSize: function(){ 
         var w = Math.floor($(window).width()/View.nodeSize) +1,
@@ -142,6 +142,8 @@ $.extend(Controller, {
             Controller.transition(); // transit to the next state (ready)
         });
 
+        var x = document.getElementById("WelcomeMsg");
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
         this.$buttons = $('.control_button');
 
         this.hookPathFinding();
@@ -238,10 +240,8 @@ $.extend(Controller, {
 		View.setRoverPos(path[1][1][i][0], path[1][1][i][1], 1);
 		View.setRoverPos(path[2][1][i][0], path[2][1][i][1], 2);
 		
-		//setTimeout(Controller.display(path, i+1), i*1000);
-		
 	},	
-	
+
     onfinish: function(event, from, to) {
         View.showStats({
             pathLength: PF.Util.pathLength(this.path),
@@ -261,9 +261,10 @@ $.extend(Controller, {
 		View.drawPath(path[1][1], 1);
         View.drawPath(path[2][1], 2);
 		
-		setTimeout(function(){
-		 	window.alert("Congrats, rover " + Controller.winner + " won");
-		}, 1000); 
+		var x = document.getElementById("WinMsg");
+		x.innerHTML = "Congrats, rover " + (Controller.winner +1) + " won" + "<img src= './visual/js/mars_rover2.png'/>";
+        setTimeout(function(){ x.className = x.className.replace("", "show"); }, 1000);
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
 		
         // => finished
     },

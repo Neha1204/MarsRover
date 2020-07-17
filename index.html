@@ -25,7 +25,8 @@
     <script type="text/javascript" src="./visual/js/view.js"></script> 
     <script type="text/javascript" src="./visual/js/controller.js"></script>
     <script type="text/javascript" src="./visual/js/panel.js"></script>
-    <script type="text/javascript" src="./visual/js/main.js"></script>     
+    <script type="text/javascript" src="./visual/js/main.js"></script>   	
+	
   </head>
   <body>
     <div id="draw_area"></div>
@@ -42,14 +43,14 @@
       Click Start Search in the lower-right corner to start the animation.
     </div>
 
+    <div id="example" class ="panel">
+	  <header>Welcome to the race between rovers</header>
+	</div>
+	
+	<div id="WelcomeMsg" class = "show">Welcome to the race between rovers <br> Enjoy the race</div>
 
-  <!--  <script>
-      function set_grid(){
-          window.clear();
-          Controller.onleavenone();
-      }
-    </script>   -->
-
+	<div id="WinMsg"></div>
+	
     <div id="algorithm_panel" class="panel right_panel">
       <header><h2 class="header_title">Select Algorithm</h2></header>
 

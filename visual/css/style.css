@@ -1,4 +1,4 @@
-body {
+ body {
     padding: 0px;
     margin: 0px;
     overflow: hidden;
@@ -45,7 +45,7 @@ h1, h2, h3, h4, h5, h6 {
 #instructions_panel {
     top: 20px;
     left: 20px;
-    width: 550px;
+    width: 450px;
 }
 
 #hide_instructions {
@@ -61,11 +61,80 @@ h1, h2, h3, h4, h5, h6 {
     text-decoration: underline;
 }
 
+#example {
+	top: 300 px;
+    left: 20 px;
+	width: 550px;
+}
+
 #GridSize {
     top: 260px;
     left: 20px;
     width: 170px;
 }
+
+#WelcomeMsg {
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  border-radius: 5px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 40%;
+  top: 30px;
+  font-size: 17px;
+  width: 300px;
+}
+
+#WelcomeMsg.show {
+  visibility: visible;
+  animation: fadein 0.5s, fadeout 0.5s 3.5s;
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+  from {top: 30px; opacity: 1;}
+  to {top: 0; opacity: 0;}
+}
+
+#WinMsg {
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  border-radius: 5px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  left: 40%;
+  top: 50px;
+  font-size: 17px;
+  width: 300px;
+}
+
+#WinMsg.show {
+  visibility: visible;
+  animation: fadei 0.5s, fadeo 0.5s 3.5s;
+}
+
+@keyframes fadei {
+  from {top: 0; opacity: 0;}
+  to {top: 50px; opacity: 1;}
+}
+
+@keyframes fadeo {
+  from {top: 50px; opacity: 1;}
+  to {top: 0; opacity: 0;}
+}
+
 
 .option_header {
     font-size: 80%;
