@@ -236,14 +236,6 @@ $.extend(Controller, {
 		View.dynamicStats('Cancelled. Start race again');
         // => ready
     },
-	
-	display: function(path, i){
-	    
-		View.setRoverPos(path[0][1][i][0], path[0][1][i][1], 0);
-		View.setRoverPos(path[1][1][i][0], path[1][1][i][1], 1);
-		View.setRoverPos(path[2][1][i][0], path[2][1][i][1], 2);
-		
-	},	
 
     onfinish: function(event, from, to) {
 		var path = this.graph;
