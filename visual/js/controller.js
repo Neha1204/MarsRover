@@ -256,10 +256,6 @@ $.extend(Controller, {
             operationCount: this.operationCount,
         });
 		
-		View.drawPath(path[0][1], 0);
-		View.drawPath(path[1][1], 1);
-        View.drawPath(path[2][1], 2);
-		
 		var imgs = [ "<img src= './visual/js/mars_rover.png' width=30% >" , 
 		             "<img src= './visual/js/mars_rover2.png' width=30% />" ,
 		             "<img src= './visual/js/mars_rover3.png' width=34% />"
@@ -273,6 +269,31 @@ $.extend(Controller, {
 			x.innerHTML = "No rover can reach the destination.";
 		}	
 		else{	
+		    var pathLen = path[this.winner[0]][0];
+		    for(var i=0; i<3; i++){
+				if(this.winner.indexOf(i) === -1){
+					
+					var len = 0, j=0;
+					while(len <= pathLen){
+					    a = path[i][1][j];
+                        b = path[i][1][j+1];
+                        dx = a[0] - b[0];
+                        dy = a[1] - b[1];
+                        len += Math.sqrt(dx * dx + dy * dy);
+                        j++;						
+					}
+					path[i][1].splice(j);
+					View.setRoverPos(path[i][1][j-1][0], path[i][1][j-1][1], i);
+				}
+		        
+		        else{
+		            View.setRoverPos(this.endNodes[3][0], this.endNodes[3][1], i); 
+		        }
+				
+				View.drawPath(path[i][1], i);
+		
+	        }	
+		
 		    var winRover = (this.winner[0] +1);
 			var winImg = imgs[Controller.winner[0]];
 		     
