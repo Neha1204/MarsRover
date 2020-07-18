@@ -337,12 +337,32 @@ var View = {
         ];
     },
     showStats: function(opts) {
+		var len1 = Math.round(opts.pathLength1 * 100) / 100;
+		if(!len1){ 
+			len1 = 'PATH DOES NOT EXIST';
+		}
+		
+		var len2 = Math.round(opts.pathLength2 * 100) / 100;
+		if(!len2){ 
+			len2 = 'PATH DOES NOT EXIST';
+		}
+		
+		var len3 = Math.round(opts.pathLength3 * 100) / 100;
+		if(!len3){ 
+			len3 = 'PATH DOES NOT EXIST';
+		}
+		
         var texts = [
-            'length: ' + Math.round(opts.pathLength * 100) / 100,
+            'Rover 1 length: ' + len1,
+			'Rover 2 length: ' + len2,
+			'Rover 3 length: ' + len3,
             'time: ' + opts.timeSpent + 'ms',
             'operations: ' + opts.operationCount
         ];
         $('#stats').show().html(texts.join('<br>'));
+    },
+	dynamicStats: function(msg) {
+         $('#stats').show().html(msg);
     },
     setCoordDirty: function(gridX, gridY, isDirty) {
         var x, y,

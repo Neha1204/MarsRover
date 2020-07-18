@@ -144,7 +144,7 @@ $.extend(Controller, {
         });
 
         var x = document.getElementById("WelcomeMsg");
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 2500);
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3500);
         this.$buttons = $('.control_button');
 
         this.hookPathFinding();
@@ -166,13 +166,10 @@ $.extend(Controller, {
             finder = Panel.getFinder();
 
         timeStart = window.performance ? performance.now() : Date.now();
-        
-		var winnerNo = {a: 0};
 
-        var graph = this.makeGraph(this.endNodes, winnerNo);
-        this.grap = graph;
-        this.path = graph[winnerNo.a][1];  
-		this.winner = winnerNo.a;
+        this.winner = new Array;
+        var graph = this.makeGraph(this.endNodes);
+        this.graph = graph;
 		
         this.operationCount = this.operations.length;
         timeEnd = window.performance ? performance.now() : Date.now();
@@ -181,7 +178,7 @@ $.extend(Controller, {
         this.loop();
         // => searching
     },
-    makeGraph: function(endNodes, winnerNo){
+    makeGraph: function(endNodes){
         var n = endNodes.length;
         var graph = new Array(n-1); 
 		var win_len = 100000;
@@ -197,8 +194,9 @@ $.extend(Controller, {
 				
                 var len = PF.Util.pathLength(dist);
 		          
-		if(len< win_len) {winnerNo.a = i;  win_len = len; this.winner = i; }
-				  
+		if(len< win_len && len > 0) {win_len = len; this.winner = [i]; }
+        else if(len === win_len) this.winner.push(i);		
+		
                 graph[i] = new Array(2);
                 graph[i][0]=len;
                 graph[i][1]= dist;
@@ -212,7 +210,8 @@ $.extend(Controller, {
         // Therefore, we have to defer the `abort` routine to make sure
         // that all the animations are done by the time we clear the colors.
         // The same reason applies for the `onreset` event handler.
-        setTimeout(function() {
+        View.dynamicStats('Restarting');
+		setTimeout(function() {
             Controller.clearOperations();
             Controller.clearFootprints();
 			View.setRoverPos(Controller.endNodes[0][0], Controller.endNodes[0][1], 0);
@@ -223,15 +222,18 @@ $.extend(Controller, {
         // => restarting
     },
     onpause: function(event, from, to) {
+		View.dynamicStats('Paused. Resume race again');
         // => paused
     },
     onresume: function(event, from, to) {
+		View.dynamicStats('Resuming');
         this.loop();
         // => searching
     },
     oncancel: function(event, from, to) {
         this.clearOperations();
         this.clearFootprints();
+		View.dynamicStats('Cancelled. Start race again');
         // => ready
     },
 	
@@ -244,39 +246,53 @@ $.extend(Controller, {
 	},	
 
     onfinish: function(event, from, to) {
+		var path = this.graph;
+		
         View.showStats({
-            pathLength: PF.Util.pathLength(this.path),
+            pathLength1: path[0][0],
+			pathLength2: path[1][0],
+			pathLength3: path[2][0],
             timeSpent:  this.timeSpent,
             operationCount: this.operationCount,
         });
-		
-		var path = this.grap;
-		console.log(path);
-		var p = this.path.length;
-		
-			for(var i=1; i<p; i++){
-			   setTimeout(Controller.display(path, i), 1000*i);
-		    }
 		
 		View.drawPath(path[0][1], 0);
 		View.drawPath(path[1][1], 1);
         View.drawPath(path[2][1], 2);
 		
-		var imgs = [ "<img src= './visual/js/mars_rover.png' width=35% height=35%/>" , 
-		             "<img src= './visual/js/mars_rover2.png' width=40% height=70%/>" ,
-		             "<img src= './visual/js/mars_rover3.png' width=40% height=40%/>"
+		var imgs = [ "<img src= './visual/js/mars_rover.png' width=30% >" , 
+		             "<img src= './visual/js/mars_rover2.png' width=30% />" ,
+		             "<img src= './visual/js/mars_rover3.png' width=34% />"
 		];
 		
 		var x = document.getElementById("WinMsg");	
-		x.innerHTML = "Congrats, rover " + (Controller.winner +1) + " won" + "<br>" + imgs[Controller.winner] ;
+		
+		console.log(this.winner);
+		
+		if(this.winner[0] === undefined){
+			x.innerHTML = "No rover can reach the destination.";
+		}	
+		else{	
+		    var winRover = (this.winner[0] +1);
+			var winImg = imgs[Controller.winner[0]];
+		     
+		    for(var i=1; i<this.winner.length; i++){
+			    winRover = winRover + " and rover " + (this.winner[i]+1);   
+		        winImg = winImg + " " +imgs[Controller.winner[i]];
+			}	
+		
+			x.innerHTML = "Congrats, rover " + winRover + " won" + "<br>" + winImg ;
+		}	
+			
         setTimeout(function(){ x.className = x.className.replace("", "show"); }, 1000);
-        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        setTimeout(function(){ x.className = x.className.replace("show", ""); }, 4000);
 		
         // => finished
     },
     onclear: function(event, from, to) {
         this.clearOperations();
         this.clearFootprints();
+		View.dynamicStats('Path Cleared. Start race again');
         // => ready
         // => ready
     },
@@ -294,6 +310,7 @@ $.extend(Controller, {
 
     onreset: function(event, from, to) {
         setTimeout(function() {
+			View.dynamicStats('Reset done. Start race again')
             Controller.clearOperations();
             Controller.clearAll();
             Controller.buildNewGrid();
@@ -309,23 +326,18 @@ $.extend(Controller, {
         console.log('=> ready');
         this.setButtonStates({
             id: 1,
-            text: 'Start Search',
+            text: 'Start Race',
             enabled: true,
             callback: $.proxy(this.start, this),
         }, {
             id: 2,
-            text: 'Pause Search',
+            text: 'Pause Race',
             enabled: false,
         }, {
             id: 3,
             text: 'Clear Walls',
             enabled: true,
             callback: $.proxy(this.reset, this),
-        }, {
-            id: 4,
-            text: 'Set grid size',
-            enabled: true,
-            callback: $.proxy(this.set, this),
         });
         // => [starting, draggingStart, draggingEnd, drawingStart, drawingEnd]
     },
@@ -337,12 +349,6 @@ $.extend(Controller, {
           {
             id: 2,
             enabled: true,
-          },
-          {
-            id: 4,
-            text: 'Set grid size',
-            enabled: true,
-            callback: $.proxy(this.set, this),
         });
         this.search();
         // => searching
@@ -351,19 +357,14 @@ $.extend(Controller, {
         console.log('=> searching');
         this.setButtonStates({
             id: 1,
-            text: 'Restart Search',
+            text: 'Restart Race',
             enabled: true,
             callback: $.proxy(this.restart, this),
         }, {
             id: 2,
-            text: 'Pause Search',
+            text: 'Pause Race',
             enabled: true,
             callback: $.proxy(this.pause, this),
-        }, {
-            id: 4,
-            text: 'Set grid size',
-            enabled: true,
-            callback: $.proxy(this.set, this),
         });
         // => [paused, finished]
     },
@@ -371,19 +372,14 @@ $.extend(Controller, {
         console.log('=> paused');
         this.setButtonStates({
             id: 1,
-            text: 'Resume Search',
+            text: 'Resume Race',
             enabled: true,
             callback: $.proxy(this.resume, this),
         }, {
             id: 2,
-            text: 'Cancel Search',
+            text: 'Cancel Race',
             enabled: true,
             callback: $.proxy(this.cancel, this),
-        }, {
-            id: 4,
-            text: 'Set grid size',
-            enabled: true,
-            callback: $.proxy(this.set, this),
         });
         // => [searching, ready]
     },
@@ -391,7 +387,7 @@ $.extend(Controller, {
         console.log('=> finished');
         this.setButtonStates({
             id: 1,
-            text: 'Restart Search',
+            text: 'Restart Race',
             enabled: true,
             callback: $.proxy(this.restart, this),
         }, {
@@ -399,18 +395,13 @@ $.extend(Controller, {
             text: 'Clear Path',
             enabled: true,
             callback: $.proxy(this.clear, this),
-        }, {
-            id: 4,
-            text: 'Set grid size',
-            enabled: true,
-            callback: $.proxy(this.set, this),
         });
     },
     onmodified: function() {
         console.log('=> modified');
         this.setButtonStates({
             id: 1,
-            text: 'Start Search',
+            text: 'Start Race',
             enabled: true,
             callback: $.proxy(this.start, this),
         }, {
@@ -418,11 +409,6 @@ $.extend(Controller, {
             text: 'Clear Path',
             enabled: true,
             callback: $.proxy(this.clear, this),
-        }, {
-            id: 4,
-            text: 'Set grid size',
-            enabled: true,
-            callback: $.proxy(this.set, this),
         });
     },
 
@@ -636,10 +622,10 @@ $.extend(Controller, {
         centerX = Math.ceil(availWidth / 2 / nodeSize);
         centerY = Math.floor(height / 2 / nodeSize);
 
-        this.setStartPos(centerX - 5, centerY-5, 0);
-	    this.setStartPos(centerX - 5, centerY, 1);
-	    this.setStartPos(centerX - 5, centerY+5, 2);
-        this.setEndPos(centerX + 5, centerY, 3);
+        this.setStartPos(centerX-1, centerY, 0);
+	    this.setStartPos(centerX+4, centerY-5, 1);
+	    this.setStartPos(centerX+4, centerY+5, 2);
+        this.setEndPos(centerX+4, centerY, 3);
    
     },
     setStartPos: function(gridX, gridY, n) {
