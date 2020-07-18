@@ -158,6 +158,21 @@ var View = {
 			this.img[n] =  this.paper.image( this.roverimg[n], coord[0], coord[1], this.nodeSize, this.nodeSize ).toFront(); 
         }
     },
+	setRoverWinPos: function(winner, gridX, gridY){
+		var coord = this.toPageCoordinate(gridX, gridY);
+		this.img[winner[0]].remove();
+		this.img[winner[0]] =  this.paper.image( this.roverimg[winner[0]], coord[0], coord[1]+18, this.nodeSize/2, this.nodeSize/2 ).toFront(); 
+		
+		if(winner[1] !== undefined){
+			this.img[winner[1]].remove();
+		    this.img[winner[1]] =  this.paper.image( this.roverimg[winner[1]], coord[0]+18, coord[1]+18, this.nodeSize/2, this.nodeSize/2 ).toFront(); 		
+		}
+		
+		if(winner[2] !== undefined){
+			this.img[winner[2]].remove();
+		    this.img[winner[2]] =  this.paper.image( this.roverimg[winner[2]], coord[0], coord[1], this.nodeSize/2, this.nodeSize/2 ).toFront(); 		
+		}
+	},	
     setEndPos: function(gridX, gridY, n) {
         var coord = this.toPageCoordinate(gridX, gridY);
         if (!this.endNode)  {

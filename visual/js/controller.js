@@ -161,6 +161,9 @@ $.extend(Controller, {
         // => erasingWall
     },
     onsearch: function(event, from, to) {
+		View.setRoverPos(Controller.endNodes[0][0], Controller.endNodes[0][1], 0);
+		View.setRoverPos(Controller.endNodes[1][0], Controller.endNodes[1][1], 1);
+		View.setRoverPos(Controller.endNodes[2][0], Controller.endNodes[2][1], 2);
         var grid,
             timeStart, timeEnd,
             finder = Panel.getFinder();
@@ -214,9 +217,6 @@ $.extend(Controller, {
 		setTimeout(function() {
             Controller.clearOperations();
             Controller.clearFootprints();
-			View.setRoverPos(Controller.endNodes[0][0], Controller.endNodes[0][1], 0);
-			View.setRoverPos(Controller.endNodes[1][0], Controller.endNodes[1][1], 1);
-			View.setRoverPos(Controller.endNodes[2][0], Controller.endNodes[2][1], 2);
             Controller.start();
         }, View.nodeColorizeEffect.duration * 1.2);
         // => restarting
@@ -285,7 +285,9 @@ $.extend(Controller, {
 				View.drawPath(path[i][1], i);
 		
 	        }	
-		
+		     
+			View.setRoverWinPos(this.winner, this.endNodes[3][0], this.endNodes[3][1]);
+			 
 		    var winRover = (this.winner[0] +1);
 			var winImg = imgs[Controller.winner[0]];
 		     
